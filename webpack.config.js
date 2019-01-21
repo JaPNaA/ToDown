@@ -1,16 +1,31 @@
 const path = require("path");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    mode: "production",
     entry: "./src/main.ts",
     output: {
         path: path.resolve(__dirname, "dist"),
         filename: "bundle.js",
-        publicPath: "/assets/"
+        publicPath: "./"
     },
     module: {
-        rules: []
+        rules: [{
+            test: /.tsx?/,
+            use: "ts-loader",
+            exclude: /node_modules/
+        }]
+    },
+    resolve: {
+        extensions: [ '.tsx', '.ts', '.js' ]
     },
     target: "web",
-    plugins: []
+    plugins: [
+        new HtmlWebpackPlugin({
+            filename: "index.html",
+            title: "ToDown"
+        })
+    ],
+
+    mode: "production",
+    watch: false
 };

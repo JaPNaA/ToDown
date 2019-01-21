@@ -1,16 +1,7 @@
-const path = require("path");
+const prodConfig = require("./webpack.config");
 
 module.exports = {
+    ...prodConfig,
     mode: "development",
-    entry: "./src/main.ts",
-    output: {
-        path: path.resolve(__dirname, "dist"),
-        filename: "bundle.js",
-        publicPath: "/assets/"
-    },
-    module: {
-        rules: []
-    },
-    target: "web",
-    plugins: []
+    watch: true
 };
