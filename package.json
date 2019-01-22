@@ -8,7 +8,7 @@
     "build": "webpack --config webpack.config.js",
     "build-dev": "webpack --config webpack.dev.config.js",
     "serve": "http-server dist",
-    "clean": "rm -r -f dist/*"
+    "clean": "rm -r -f dist/* distTest/*"
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,8 @@
   "homepage": "https://github.com/JaPNaA/ToDown#readme",
   "devDependencies": {
     "@types/node": "^10.12.18",
-    "http-server": "^0.11.1"
+    "http-server": "^0.11.1",
+    "tslint": "^5.12.1"
   },
   "dependencies": {
     "html-webpack-plugin": "^3.2.0",
