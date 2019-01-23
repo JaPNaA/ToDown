@@ -1,7 +1,7 @@
-import defaultIfUndef from "../../../../src/mdparser/parser/utils/defaultIfUndef";
-import Test from "../../../test";
+import defaultIfUndef from "../../src/utils/defaultIfUndef";
+import Test from "../test";
 
-const undef: any[] = [undefined, undefined, 1];
+const undef: any[] = [undefined, undefined];
 const def: any[] = [
     null,
     0,

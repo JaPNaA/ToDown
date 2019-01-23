@@ -1,5 +1,5 @@
-import Range from "../types/range";
 import defaultIfUndef from "./defaultIfUndef";
+import Range from "../types/range";
 
 type Comparator<T> = (a: T, b: T) => number;
 

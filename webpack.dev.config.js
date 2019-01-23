@@ -12,7 +12,7 @@ const distConfig = Object.assign({}, devConfig);
 
 const testConfig = Object.assign({}, devConfig, {
     name: "test",
-    entry: "./test/main.ts",
+    entry: "./test/index.ts",
     output: {
         path: path.resolve(__dirname, "distTest"),
         filename: "bundle.js",

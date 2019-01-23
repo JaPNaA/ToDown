@@ -1,6 +1,6 @@
-import binarySearch from "../../../../src/mdparser/parser/utils/binarySearch";
-import Test from "../../../test";
-import { randomIntMax, randomRange, randomIntRange } from "../../../../src/mdparser/parser/utils/random";
+import binarySearch from "../../src/utils/binarySearch";
+import Test from "../test";
+import { randomIntMax, randomRange, randomIntRange } from "../../src/utils/random";
 
 function randFloatArr() {
     const length = randomIntMax(1000);

@@ -1,4 +1,4 @@
-import Range from "./range";
+import Range from "../../../types/range";
 import Plugin from "./plugin";
 
 class TreeNode {

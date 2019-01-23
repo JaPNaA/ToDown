@@ -1,5 +1,5 @@
 import Plugin from "../types/plugin";
-import Range from "../types/range";
+import Range from "../../../types/range";
 
 class Heading extends Plugin {
     // /\n\s*#\s*.+/

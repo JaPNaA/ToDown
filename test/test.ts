@@ -1,7 +1,7 @@
-import { info, warn, error } from "./console/console";
+import { info, warn, error } from "../src/console/console";
 import { AssertionError } from "assert";
 import { inspect } from "util";
-import { bright } from "./console/consoleUtils";
+import { bright } from "../src/console/consoleUtils";
 
 type TestFunc = (this: Test) => any;
 type NestedStringTestObj = {
@@ -37,6 +37,8 @@ class Test {
 
             this.stack.pop();
         }
+
+        this.infoWithStack("Test done");
     }
 
     public runTest_stack(newStack: string[]) {
@@ -88,7 +90,7 @@ class Test {
         } else if (result === Equals.onlyValue) {
             this.warnWithStack(
                 "Assert not equals warn\n" + inspect(a) +
-                "is equal to\n" + inspect(b) +
+                "\nis equal to\n" + inspect(b) +
                 "\nbut are different types"
             );
         }
@@ -106,7 +108,7 @@ class Test {
         } else if (result === Equals.onlyValue) {
             this.warnWithStack(
                 "Assert equals warn\n" + inspect(a) +
-                "is equal to\n" + inspect(b) +
+                "\nis equal to\n" + inspect(b) +
                 "\nbut are not the same type"
             );
         }
@@ -140,14 +142,14 @@ class Test {
 
     private stackToString(): string {
         const stackTrace = this.cleanStackTrace(this.stackTrace);
-        return this.testCallStackToString()
+        return bright(this.testCallStackToString())
             + "\n" + stackTrace;
     }
 
     private testCallStackToString() {
-        if (this.stack.length < 1) {
+        if (this.stack.length <= 1) {
             if (this.stack.length === 0) {
-                return "[unknown]";
+                return "[anonymous]";
             } else {
                 return this.stack[0];
             }
@@ -162,10 +164,10 @@ class Test {
 
         stackStr.push(": " + this.stack[i]);
 
-        return bright(stackStr.join(""));
+        return stackStr.join("");
     }
 
-    private cleanStackTrace(stack: string | undefined) {
+    private cleanStackTrace(stack: string | undefined): string {
         if (!stack) {
             return "No stack";
         }
