@@ -1,12 +1,48 @@
 import binarySearch from "../../../../src/mdparser/parser/utils/binarySearch";
 import Test from "../../../test";
+import { randomIntMax, randomRange, randomIntRange } from "../../../../src/mdparser/parser/utils/random";
 
-const arr = [-242, -42, -5, -3, -0, 0, 1, 4, 5, 5, 55, 23, 53, 265, 267];
+function randFloatArr() {
+    const length = randomIntMax(1000);
+    const arr: number[] = [];
 
-export default new Test(function() {
-    this.test("Finds correct index", function() {
-        for (let i = 0; i < arr.length; i++) {
-            this.assert(binarySearch(arr, arr[i]) === i);
-        }
+    for (let i = 0; i < length; i++) {
+        arr.push(randomRange(-1e9, 1e9));
+    }
+
+    return arr.sort((a, b) => a - b);
+}
+
+function randIntArr() {
+    const length = randomIntMax(1000);
+    const arr: number[] = [];
+
+    for (let i = 0; i < length; i++) {
+        arr.push(randomIntRange(-100, 100));
+    }
+
+    return arr.sort((a, b) => a - b);
+}
+
+const floatArr = randFloatArr();
+const intArr = randIntArr();
+
+function binarySearchTestAllElements(arr: number[]) {
+    for (let i = 0; i < arr.length; i++) {
+        binarySearchTest.assertEquals(
+            arr[binarySearch(arr, arr[i])],
+            arr[i]
+        );
+    }
+}
+
+const binarySearchTest = new Test(function () {
+    this.test("Finds correct index (floats)", function () {
+        binarySearchTestAllElements(floatArr);
+    });
+    this.test("Finds correct index (ints)", function () {
+        binarySearchTestAllElements(intArr);
     });
 });
+
+export default binarySearchTest;

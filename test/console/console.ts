@@ -1,5 +1,5 @@
 import escCode from "./consoleEscCodes";
-import { inspect } from "util";
+import { bright } from "./consoleUtils";
 
 const PADD_SIZE = 11;
 const lineBreakpoints = " -.?!;:(){}[]/";
@@ -65,7 +65,7 @@ function error(a: string, b?: string) {
     }
 }
 
-function error_withTitle(message: string, title: string) {
+function error_withTitle(title: string, message: string) {
     error_messageOnly(bright(title) + "\n" + message);
 }
 
@@ -124,10 +124,6 @@ function padd(message: string, padding: string): string {
     }
 
     return str.join("\n");
-}
-
-function bright(str: string) {
-    return escCode.bright + str + escCode.reset;
 }
 
 function stringToLines(string: string): string[] {

@@ -1,15 +1,23 @@
 import { info, warn, error } from "./console/console";
 import { AssertionError } from "assert";
+import { inspect } from "util";
+import { bright } from "./console/consoleUtils";
 
 type TestFunc = (this: Test) => any;
 type NestedStringTestObj = {
     [x: string]: NestedStringTestObj | Test
 };
 
+enum Equals {
+    not, is, onlyValue
+};
+
 class Test {
     private func?: Function;
     private stack: string[] = [];
     private stackTrace?: string;
+
+    private static ignoreLineRegexp = /(\/test\/test\.ts)|__webpack_require__/;
 
     constructor(func?: TestFunc) {
         this.func = func;
@@ -49,34 +57,94 @@ class Test {
     public test(name: string, func: TestFunc) {
         this.stack.push(name);
         this.stackTrace = new Error().stack;
-        try { func.call(this); } catch (e) { }
+        try {
+            func.call(this);
+        } catch (e) {
+            this.errorWithStack("An error occured while testing");
+        }
         this.stack.pop();
     }
 
-    public assert(v: boolean) {
+    public assertTrue(v: boolean) {
         if (typeof v !== "boolean") {
             this.warnWithStack("Asserting value is not a boolean");
         }
 
         if (!v) {
             this.errorWithStack("Assert true failed");
-            throw new AssertionError();
+            this.throwError();
         }
     }
 
+    public assertNotEquals(a: any, b: any) {
+        const result = this.testEquals(a, b);
+
+        if (result === Equals.is) {
+            this.errorWithStack(
+                "Assert not equals failed\n" + inspect(a) +
+                "\nequals\n" + inspect(b)
+            );
+            this.throwError();
+        } else if (result === Equals.onlyValue) {
+            this.warnWithStack(
+                "Assert not equals warn\n" + inspect(a) +
+                "is equal to\n" + inspect(b) +
+                "\nbut are different types"
+            );
+        }
+    }
+
+    public assertEquals(a: any, b: any) {
+        const result = this.testEquals(a, b);
+
+        if (result === Equals.not) {
+            this.errorWithStack(
+                "Assert equals failed\n" + inspect(a) +
+                "\ndoes not equal\n" + inspect(b)
+            );
+            this.throwError();
+        } else if (result === Equals.onlyValue) {
+            this.warnWithStack(
+                "Assert equals warn\n" + inspect(a) +
+                "is equal to\n" + inspect(b) +
+                "\nbut are not the same type"
+            );
+        }
+    }
+
+    private testEquals(a: any, b: any): Equals {
+        if (a === b) {
+            return Equals.is;
+        } else if (a == b) {
+            return Equals.onlyValue;
+        } else {
+            return Equals.not;
+        }
+    }
+
+    private throwError(): void {
+        throw new AssertionError();
+    }
+
     private errorWithStack(message: string) {
-        error(this.stackToString(), message);
+        error(message, this.stackToString());
     }
 
     private warnWithStack(message: string) {
-        warn(this.stackToString(), message);
+        warn(message, this.stackToString());
     }
 
     private infoWithStack(message: string) {
-        info(this.stackToString(), message);
+        info(message, this.stackToString());
     }
 
     private stackToString(): string {
+        const stackTrace = this.cleanStackTrace(this.stackTrace);
+        return this.testCallStackToString()
+            + "\n" + stackTrace;
+    }
+
+    private testCallStackToString() {
         if (this.stack.length < 1) {
             if (this.stack.length === 0) {
                 return "[unknown]";
@@ -86,7 +154,6 @@ class Test {
         }
 
         const stackStr = [this.stack[0]];
-        const stack = this.cleanStack(this.stackTrace);
         let i: number = 1;
 
         for (; i < this.stack.length - 1; i++) {
@@ -95,13 +162,10 @@ class Test {
 
         stackStr.push(": " + this.stack[i]);
 
-        stackStr.push("\n");
-        stackStr.push(stack);
-
-        return stackStr.join("");
+        return bright(stackStr.join(""));
     }
 
-    private cleanStack(stack: string | undefined) {
+    private cleanStackTrace(stack: string | undefined) {
         if (!stack) {
             return "No stack";
         }
@@ -109,6 +173,7 @@ class Test {
         let stackStr = stack;
 
         stackStr = this.removeFirstLines(stackStr, 2);
+        stackStr = this.removeTestFromStack(stackStr);
         stackStr = stackStr.replace(/webpack:\/\/\//g, "");
 
         return stackStr;
@@ -116,12 +181,32 @@ class Test {
 
     private removeFirstLines(str: string, amount: number): string {
         let returnStr = str;
-        
+
         for (let i = 0; i < amount; i++) {
             returnStr = returnStr.slice(returnStr.indexOf("\n") + 1);
         }
 
         return returnStr;
+    }
+
+    private removeTestFromStack(str: string): string {
+        const lines = str.split("\n");
+        const returnStrArr: string[] = [];
+
+        let lastWasSkipped = false;
+
+        for (let line of lines) {
+            if (Test.ignoreLineRegexp.test(line)) {
+                if (lastWasSkipped) { continue; }
+                returnStrArr.push(" ... ");
+                lastWasSkipped = true;
+            } else {
+                returnStrArr.push(line);
+                lastWasSkipped = false;
+            }
+        }
+
+        return returnStrArr.join("\n");
     }
 }
 

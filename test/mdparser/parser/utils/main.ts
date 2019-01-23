@@ -1,3 +1,4 @@
-import binarySearch from "./binarySearch";
+import binarySearchTest from "./binarySearch";
+import defaultIfUndef from "./defaultIfUndef";
 
-export default { binarySearch };
+export default { binarySearchTest, defaultIfUndef };

@@ -4,7 +4,7 @@
   "description": "A markdown todo list",
   "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node distTest/bundle.js",
     "build": "webpack --config webpack.config.js",
     "build-dev": "webpack --config webpack.dev.config.js",
     "serve": "http-server dist",

@@ -23,6 +23,12 @@ function binarySearch<T>(arr: T[], target: T, _comparator?: Comparator<T>): numb
         } else {
             return position;
         }
+
+        // console.log(possibleRange.start, possibleRange.end);
+
+        if (possibleRange.start === possibleRange.end) {
+            return -1;
+        }
     }
 }
 
