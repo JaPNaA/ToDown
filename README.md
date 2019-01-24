@@ -4,9 +4,9 @@ A markdown todo list
 Because a normal todo list isn't nerdy enough
 
 ## Roadmap
-  - [ ] Write more tests
-    - [ ] enough tests to cover what I've written in code so far
-  - [ ] Work on parsing
+  - [x] Write more tests
+    - enough tests to cover what I've written in code so far
+  - [ ] **Work on parsing**
   - [ ] Work on being able to edit the document efficiently
     - aka not have the entire document update every time you type a letter
   - [ ] Create a markdown editor
