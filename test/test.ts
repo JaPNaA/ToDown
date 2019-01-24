@@ -18,6 +18,7 @@ class Test {
     private stackTrace?: string;
 
     private static ignoreLineRegexp = /(\/test\/test\.ts)|__webpack_require__/;
+    private static testIterations = 1e5;
 
     constructor(func?: TestFunc) {
         this.func = func;
@@ -75,6 +76,12 @@ class Test {
         if (!v) {
             this.errorWithStack("Assert true failed");
             this.throwError();
+        }
+    }
+
+    public iterateAssertTrue(func: () => boolean) {
+        for (let i = 0; i < Test.testIterations; i++) {
+            this.assertTrue(func());
         }
     }
 

@@ -1,11 +1,19 @@
+import intify from "./intify";
+
 function randomRange(start: number, end: number): number {
     const diff = end - start;
     return start + Math.random() * diff;
 }
 
 function randomIntRange(start: number, end: number): number {
+    if (end < start) {
+        return randomIntRange(end, start);
+    }
+
     const diff = end - start;
-    return Math.floor(start + Math.random() * diff);
+    const result = start + Math.random() * diff;
+
+    return intify(result);
 }
 
 function randomMax(max: number): number {
@@ -13,7 +21,7 @@ function randomMax(max: number): number {
 }
 
 function randomIntMax(max: number): number {
-    return Math.floor(Math.random() * max);
+    return intify(Math.random() * max);
 }
 
 export { randomRange, randomIntRange, randomMax, randomIntMax };
