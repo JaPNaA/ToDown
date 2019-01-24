@@ -1,4 +1,4 @@
-import { info, warn, error } from "./console";
+import { info, warn, error } from "../../src/console/console";
 
 error("Below is an error message");
 error(`This is an error message

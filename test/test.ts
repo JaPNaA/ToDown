@@ -2,6 +2,7 @@ import { info, warn, error } from "../src/console/console";
 import { AssertionError } from "assert";
 import { inspect } from "util";
 import { bright } from "../src/console/consoleUtils";
+import Timer from "./_utils/timer";
 
 type TestFunc = (this: Test) => any;
 type NestedStringTestObj = {
@@ -14,11 +15,11 @@ enum Equals {
 
 class Test {
     private func?: Function;
-    private stack: string[] = [];
+    private positionStack: string[] = [];
     private stackTrace?: string;
 
     private static ignoreLineRegexp = /(\/test\/test\.ts)|__webpack_require__/;
-    private static testIterations = 1e5;
+    private static testIterations = 1e6;
 
     constructor(func?: TestFunc) {
         this.func = func;
@@ -26,46 +27,58 @@ class Test {
 
     public runTree(tree: NestedStringTestObj) {
         for (let index in tree) {
-            this.stack.push(index);
+            this.positionStack.push(index);
 
             const i = tree[index];
 
             if (i instanceof Test) {
-                i.runTest_stack(this.stack);
+                i.runTest_stack(this.positionStack);
             } else {
                 this.runTree(i);
             }
 
-            this.stack.pop();
+            this.positionStack.pop();
         }
-
-        this.infoWithStack("Test done");
     }
 
     public runTest_stack(newStack: string[]) {
-        const oldStack = this.stack;
-        this.stack = newStack;
+        const oldStack = this.positionStack;
+        this.positionStack = newStack;
         this.runTest();
-        this.stack = oldStack;
+        this.positionStack = oldStack;
     }
 
     public runTest() {
-        if (this.func) {
-            this.func();
-        } else {
+        if (!this.func) {
             throw new Error("No test function was specified to run");
         }
+
+        const timer = new Timer();
+
+        try {
+            timer.start();
+            this.func();
+        } catch (e) {
+            this.errorWithStack("An error occured while running test\n" + inspect(e));
+        }
+
+        const deltaTime = timer.getDeltaMillis();
+
+        this.infoWithPosition(
+            "Test done\n" +
+            deltaTime + "ms"
+        );
     }
 
     public test(name: string, func: TestFunc) {
-        this.stack.push(name);
+        this.positionStack.push(name);
         this.stackTrace = new Error().stack;
         try {
             func.call(this);
         } catch (e) {
-            this.errorWithStack("An error occured while testing");
+            this.errorWithStack("An error occured while testing\n" + inspect(e));
         }
-        this.stack.pop();
+        this.positionStack.pop();
     }
 
     public assertTrue(v: boolean) {
@@ -135,41 +148,53 @@ class Test {
         throw new AssertionError();
     }
 
-    private errorWithStack(message: string) {
+    public errorWithStack(message: string) {
         error(message, this.stackToString());
     }
 
-    private warnWithStack(message: string) {
+    public warnWithStack(message: string) {
         warn(message, this.stackToString());
     }
 
-    private infoWithStack(message: string) {
+    public infoWithStack(message: string) {
         info(message, this.stackToString());
+    }
+
+    public errorWithPosition(message: string) {
+        error(message, this.getPositionString());
+    }
+
+    public warnWithPosition(message: string) {
+        warn(message, this.getPositionString());
+    }
+
+    public infoWithPosition(message: string) {
+        info(message, this.getPositionString());
     }
 
     private stackToString(): string {
         const stackTrace = this.cleanStackTrace(this.stackTrace);
-        return bright(this.testCallStackToString())
+        return bright(this.getPositionString())
             + "\n" + stackTrace;
     }
 
-    private testCallStackToString() {
-        if (this.stack.length <= 1) {
-            if (this.stack.length === 0) {
+    private getPositionString() {
+        if (this.positionStack.length <= 1) {
+            if (this.positionStack.length === 0) {
                 return "[anonymous]";
             } else {
-                return this.stack[0];
+                return this.positionStack[0];
             }
         }
 
-        const stackStr = [this.stack[0]];
+        const stackStr = [this.positionStack[0]];
         let i: number = 1;
 
-        for (; i < this.stack.length - 1; i++) {
-            stackStr.push("." + this.stack[i]);
+        for (; i < this.positionStack.length - 1; i++) {
+            stackStr.push("." + this.positionStack[i]);
         }
 
-        stackStr.push(": " + this.stack[i]);
+        stackStr.push(": " + this.positionStack[i]);
 
         return stackStr.join("");
     }

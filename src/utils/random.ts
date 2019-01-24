@@ -5,10 +5,12 @@ function randomRange(start: number, end: number): number {
     return start + Math.random() * diff;
 }
 
-function randomIntRange(start: number, end: number): number {
-    if (end < start) {
-        return randomIntRange(end, start);
+function randomIntRange(_start: number, end: number): number {
+    if (end < _start) {
+        return randomIntRange(end, _start);
     }
+
+    const start = Math.ceil(_start);
 
     const diff = end - start;
     const result = start + Math.random() * diff;
