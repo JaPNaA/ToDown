@@ -1,5 +1,4 @@
 import { info, warn, error } from "../src/console/console";
-import { AssertionError } from "assert";
 import { inspect } from "util";
 import { bright } from "../src/console/consoleUtils";
 import Timer from "./_utils/timer";
@@ -50,7 +49,8 @@ class Test {
 
     public runTest() {
         if (!this.func) {
-            throw new Error("No test function was specified to run");
+            this.throwError("No test function was specified to run");
+            return;
         }
 
         const timer = new Timer();
@@ -134,18 +134,16 @@ class Test {
         }
     }
 
-    private testEquals(a: any, b: any): Equals {
-        if (a === b) {
-            return Equals.is;
-        } else if (a == b) {
-            return Equals.onlyValue;
-        } else {
-            return Equals.not;
+    public assertContains(container: string, ...containees: string[]) {
+        for (let containee of containees) {
+            if (!container.includes(containee)) {
+                this.errorWithStack(
+                    "Assert contains fail\n" + inspect(container) +
+                    "\ndoes not contain\n" + inspect(containee)
+                );
+                this.throwError();
+            }
         }
-    }
-
-    private throwError(): void {
-        throw new AssertionError();
     }
 
     public errorWithStack(message: string) {
@@ -170,6 +168,20 @@ class Test {
 
     public infoWithPosition(message: string) {
         info(message, this.getPositionString());
+    }
+
+    private testEquals(a: any, b: any): Equals {
+        if (a === b) {
+            return Equals.is;
+        } else if (a == b) {
+            return Equals.onlyValue;
+        } else {
+            return Equals.not;
+        }
+    }
+
+    private throwError(message?: string): void {
+        throw new Error(message);
     }
 
     private stackToString(): string {

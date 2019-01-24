@@ -8,7 +8,8 @@
     "build": "webpack --config webpack.config.js",
     "build-dev": "webpack --config webpack.dev.config.js",
     "serve": "http-server dist",
-    "clean": "rm -r -f dist/* distTest/*"
+    "clean": "rm -r -f dist/* distTest/*",
+    "cover-test": "istanbul cover distTest/bundle.js"
   },
   "repository": {
     "type": "git",

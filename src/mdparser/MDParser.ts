@@ -1,6 +1,19 @@
+import HFactory from "./parser/htmlGen/hFactory";
+
 class MDParser {
-    static parse(markdownStr: string) {
-        return "<h1> This markdown wasn't parsed! </h1> <div> " + markdownStr + " </div>";
+    static parseToString(markdownStr: string) {
+        return markdownStr;
+    }
+    
+    static parseToElement(markdownStr: string): HTMLDivElement {
+        const elm = document.createElement("div");
+        elm.innerHTML = markdownStr;
+        return elm;
+    }
+
+    private static parse() {
+        const gen = new HFactory();
+        
     }
 }
 
