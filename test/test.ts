@@ -134,6 +134,36 @@ class Test {
         }
     }
 
+    public assertArrayEquals(a: any[], b: any[]) {
+        if (a.length !== b.length) {
+            this.errorWithStack(
+                "Assert array equals failed\n" + inspect(a) +
+                "\ndoes not equal the length of \n" + inspect(b)
+            );
+            this.throwError();
+            return;
+        }
+
+        for (let i = 0; i < a.length; i++) {
+            const result = this.testEquals(a[i], b[i]);
+            
+            if (result === Equals.not) {
+                this.errorWithStack(
+                    "Assert array equals failed\n" + inspect(a) +
+                    "\ndoes not equal\n" + inspect(b) + 
+                    "\nat index " + i
+                );
+                this.throwError();
+            } else if (result === Equals.onlyValue) {
+                this.warnWithStack(
+                    "Assert array equals warn\n" + inspect(a) +
+                    "\nis equal to\n" + inspect(b) +
+                    "\nbut are not the same type at index " + i
+                );
+            }
+        }
+    }
+
     public assertContains(container: string, ...containees: string[]) {
         for (let containee of containees) {
             if (!container.includes(containee)) {

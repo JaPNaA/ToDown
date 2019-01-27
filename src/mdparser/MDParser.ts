@@ -1,8 +1,14 @@
-import HFactory from "./parser/htmlGen/hFactory";
+import HFactory from "./htmlGen/hFactory";
 
 class MDParser {
     static parseToString(markdownStr: string) {
-        return markdownStr;
+        const root = HFactory.createRoot();
+        const a = HFactory.createA();
+        root.appendChild(a);
+        a.href = "https://japnaa.gitlab.io/";
+        a.appendChild(HFactory.createText("hello world"));
+
+        return root.toString();
     }
     
     static parseToElement(markdownStr: string): HTMLDivElement {

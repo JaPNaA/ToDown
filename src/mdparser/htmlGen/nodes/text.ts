@@ -1,11 +1,11 @@
 import HNode from "../node";
 
 class HTextNode extends HNode {
-    value: string;
+    private value: string;
 
-    constructor(value: string) {
+    constructor(value?: string) {
         super();
-        this.value = value;
+        this.value = value || "";
     }
 
     public toElement(): HTMLElement {

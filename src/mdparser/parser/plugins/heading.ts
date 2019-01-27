@@ -1,16 +1,27 @@
 import Plugin from "../types/plugin";
 import Range from "../../../types/range";
+import HElement from "../../htmlGen/element";
+import HParagraph from "../../htmlGen/elements/p";
+import HTextNode from "../../htmlGen/nodes/text";
+import { addPlugin } from "./_pluginsList";
 
 class Heading extends Plugin {
-    // /\n\s*#\s*.+/
+    startToken: RegExp = /^\n\s+#/;
+    endToken: RegExp = /^\n/;
 
     constructor() {
         super();
+        this.afterConstructor();
     }
 
-    public locateNextSelf(markdown: string): Range {
-        return new Range(0, 1);
+    public parseSelf(): HElement {
+        const p = new HParagraph();
+        const text = new HTextNode("Heading (not implemented)");
+        p.appendChild(text);
+        return p;
     }
 }
+
+addPlugin(new Heading());
 
 export default Heading;
