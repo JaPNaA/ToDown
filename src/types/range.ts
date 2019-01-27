@@ -20,6 +20,13 @@ class Range {
     public length(): number {
         return this.end - this.start;
     }
+
+    public sliceOn(arr: string): string;
+    public sliceOn(arr: any[]): any[];
+
+    public sliceOn(arr: string | any[]): string | any[] {
+        return arr.slice(this.start, this.end);
+    }
 }
 
 export default Range;
