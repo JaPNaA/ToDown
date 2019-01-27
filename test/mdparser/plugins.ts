@@ -15,36 +15,26 @@ function isStringArray(arr: any): boolean {
 }
 
 function testPlugin(plugin: Plugin) {
-    if (plugin.startToken instanceof RegExp) {
-        pluginsTest.test("Should have a RegExp as startTokenArr", function () {
-            pluginsTest.assertTrue(plugin.startTokenArr instanceof RegExp);
-        });
-    } else {
-        pluginsTest.test("Should have a string[] as startTokenArr", function () {
-            pluginsTest.assertTrue(isStringArray(plugin.startTokenArr));
-        });
-    }
+    for (let property of ["startTokenArr", "endTokenArr", "stopFindEndTokenArr"]) {
+        // @ts-ignore
+        if (plugin[property] instanceof RegExp) {
+            pluginsTest.test("Should have a RegExp as " + property, function () {
+                // @ts-ignore
+                pluginsTest.assertTrue(plugin[property] instanceof RegExp);
+            });
 
-    if (plugin.endToken instanceof RegExp) {
-        pluginsTest.test("Should have a RegExp as endTokenArr", function () {
-            pluginsTest.assertTrue(plugin.endTokenArr instanceof RegExp);
-        });
-    } else {
-        pluginsTest.test("Should have a string[] as endTokenArr", function () {
-            pluginsTest.assertTrue(isStringArray(plugin.endTokenArr));
-        });
+            pluginsTest.test(property + "RegExp should start with ^", function() {
+                // @ts-ignore
+                const regexp = plugin[property] as RegExp;
+                pluginsTest.assertEquals(regexp.source[0], "^");
+            });
+        } else {
+            pluginsTest.test("Should have a string[] as " + property, function () {
+                // @ts-ignore
+                pluginsTest.assertTrue(isStringArray(plugin[property]));
+            });
+        }
     }
-
-    if (plugin.stopFindEndToken instanceof RegExp) {
-        pluginsTest.test("Should have a RegExp as stopFindEndTokenArr", function () {
-            pluginsTest.assertTrue(plugin.stopFindEndTokenArr instanceof RegExp);
-        });
-    } else {
-        pluginsTest.test("Should have a string[] as stopFindEndTokenArr", function () {
-            pluginsTest.assertTrue(isStringArray(plugin.stopFindEndTokenArr));
-        });
-    }
-
 }
 
 const pluginsTest = new Test(function () {
