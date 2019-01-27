@@ -3,17 +3,22 @@ import GroupPlugin from "../types/group";
 import Range from "../../../types/range";
 
 class Grouper {
-    // private markdown: string;
+    private markdown: string;
     private pluginsList: Plugin[];
     private substr: string;
     private substrOffset: number;
     private groups: GroupPlugin[];
 
+    private lastChar: string;
+
     constructor(markdown: string, pluginsList: Plugin[]) {
-        this.substr = markdown;
+        // reason for + \n: makes plugin matching easier
+        this.markdown = this.substr = markdown + '\n';
         this.substrOffset = 0;
         this.groups = [];
         this.pluginsList = pluginsList;
+
+        this.lastChar = '\n';
     }
 
     public group() {
@@ -27,7 +32,7 @@ class Grouper {
     private groupOne(): void {
         const match = this.findMatch();
         if (match) {
-            this.moveAhead(match.length());
+            this.moveAheadWithMatch(match);
             this.groups.push(match);
         } else {
             this.moveAhead(1);
@@ -36,16 +41,56 @@ class Grouper {
 
     private findMatch(): GroupPlugin | null {
         for (let plugin of this.pluginsList) {
-            const match = this.getMatch(this.substr, plugin.startToken);
+            const match = this.findAndCheckMatch(plugin);
             if (match) {
-                const end = this.findStop(match, plugin.endToken, plugin.stopFindEndToken);
-                
-                if (end) {
-                    return new GroupPlugin(match.start, end.end, match.end, end.start, plugin);
-                }
+                return match;
             }
         }
 
+        return null;
+    }
+
+    private findAndCheckMatch(plugin: Plugin): GroupPlugin | null {
+        if (!this.pluginFirstCharCompatible(plugin)) {
+            return null;
+        }
+
+        const match = this.findMatchGroup(plugin);
+        if (!match) { return null; }
+
+        if (!this.pluginLastCharCompatible(plugin, match)) {
+            return null;
+        }
+
+        return match;
+    }
+
+    private pluginFirstCharCompatible(plugin: Plugin) {
+        if (plugin.beforeStartChar) {
+            return this.lastChar === plugin.beforeStartChar;
+        } else {
+            return true;
+        }
+    }
+
+    private pluginLastCharCompatible(plugin: Plugin, match: GroupPlugin) {
+        if (plugin.afterEndChar) {
+            const charAfterMatch = this.markdown[match.end];
+            return charAfterMatch === plugin.afterEndChar;
+        } else {
+            return true;
+        }
+    }
+
+    private findMatchGroup(plugin: Plugin): GroupPlugin | null {
+        const match = this.getMatch(this.substr, plugin.startToken);
+        if (match) {
+            const end = this.findStop(match, plugin.endToken, plugin.stopFindEndToken);
+
+            if (end) {
+                return new GroupPlugin(match.start, end.end, match.end, end.start, plugin);
+            }
+        }
         return null;
     }
 
@@ -90,7 +135,16 @@ class Grouper {
         return this.substr.length > 0;
     }
 
+    private moveAheadWithMatch(match: GroupPlugin) {
+        if (match.plugin.captureEndToken) {
+            this.moveAhead(match.length());
+        } else {
+            this.moveAhead(match.inner.end - match.start);
+        }
+    }
+
     private moveAhead(distance: number): void {
+        this.lastChar = this.substr[distance - 1];
         this.substr = this.substr.slice(distance);
         this.substrOffset += distance;
     }

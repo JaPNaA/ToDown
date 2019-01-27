@@ -6,8 +6,13 @@ import HTextNode from "../htmlGen/nodes/text";
 import { addPlugin } from "./_pluginsList";
 
 class Heading extends Plugin {
-    startToken: RegExp = /^\n#\s+/;
-    endToken: RegExp = /^\n/;
+    startToken: RegExp = /^#+\s+/;
+    endToken: string = "\n";
+
+    beforeStartChar: string = '\n';
+    afterEndChar: null = null;
+    captureEndToken: boolean = false;
+    stopFindEndToken: string = '\n';
 
     constructor() {
         super();
