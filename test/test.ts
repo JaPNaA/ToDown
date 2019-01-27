@@ -92,6 +92,17 @@ class Test {
         }
     }
 
+    public assertFalse(v: boolean) {
+        if (typeof v !== "boolean") {
+            this.warnWithStack("Asserting value is not a boolean");
+        }
+
+        if (v) {
+            this.errorWithStack("Assert false failed");
+            this.throwError();
+        }
+    }
+
     public iterateAssertTrue(func: () => boolean) {
         for (let i = 0; i < Test.testIterations; i++) {
             this.assertTrue(func());

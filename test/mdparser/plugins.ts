@@ -28,6 +28,12 @@ function testPlugin(plugin: Plugin) {
                 const regexp = plugin[property] as RegExp;
                 pluginsTest.assertEquals(regexp.source[0], "^");
             });
+
+            pluginsTest.test(property + "RegExp should not be global", function () {
+                // @ts-ignore
+                const regexp = plugin[property] as RegExp;
+                pluginsTest.assertFalse(regexp.global);
+            });
         } else {
             pluginsTest.test("Should have a string[] as " + property, function () {
                 // @ts-ignore
