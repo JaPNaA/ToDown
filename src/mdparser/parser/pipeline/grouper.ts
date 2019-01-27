@@ -1,17 +1,17 @@
-import Plugin from "../types/plugin";
+import MDPlugin from "../types/plugin";
 import GroupPlugin from "../types/group";
 import Range from "../../../types/range";
 
 class Grouper {
     private markdown: string;
-    private pluginsList: Plugin[];
+    private pluginsList: MDPlugin[];
     private substr: string;
     private substrOffset: number;
     private groups: GroupPlugin[];
 
     private lastChar: string;
 
-    constructor(markdown: string, pluginsList: Plugin[]) {
+    constructor(markdown: string, pluginsList: MDPlugin[]) {
         // reason for + \n: makes plugin matching easier
         this.markdown = this.substr = markdown + '\n';
         this.substrOffset = 0;
@@ -50,7 +50,7 @@ class Grouper {
         return null;
     }
 
-    private findAndCheckMatch(plugin: Plugin): GroupPlugin | null {
+    private findAndCheckMatch(plugin: MDPlugin): GroupPlugin | null {
         if (!this.pluginFirstCharCompatible(plugin)) {
             return null;
         }
@@ -65,7 +65,7 @@ class Grouper {
         return match;
     }
 
-    private pluginFirstCharCompatible(plugin: Plugin) {
+    private pluginFirstCharCompatible(plugin: MDPlugin) {
         if (plugin.beforeStartChar) {
             return this.lastChar === plugin.beforeStartChar;
         } else {
@@ -73,7 +73,7 @@ class Grouper {
         }
     }
 
-    private pluginLastCharCompatible(plugin: Plugin, match: GroupPlugin) {
+    private pluginLastCharCompatible(plugin: MDPlugin, match: GroupPlugin) {
         if (plugin.afterEndChar) {
             const charAfterMatch = this.markdown[match.end];
             return charAfterMatch === plugin.afterEndChar;
@@ -82,10 +82,11 @@ class Grouper {
         }
     }
 
-    private findMatchGroup(plugin: Plugin): GroupPlugin | null {
+    private findMatchGroup(plugin: MDPlugin): GroupPlugin | null {
         const match = this.getMatch(this.substr, plugin.startToken);
         if (match) {
-            const end = this.findStop(match, plugin.endToken, plugin.stopFindEndToken);
+            const endToken = plugin.getDynamicEndToken(match.sliceOn(this.markdown));
+            const end = this.findStop(match, endToken, plugin.stopFindEndToken);
 
             if (end) {
                 return new GroupPlugin(match.start, end.end, match.end, end.start, plugin);

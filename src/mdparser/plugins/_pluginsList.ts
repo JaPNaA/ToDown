@@ -1,8 +1,8 @@
-import Plugin from "../parser/types/plugin";
+import MDPlugin from "../parser/types/plugin";
 
-const pluginsList: Plugin[] = [];
+const pluginsList: MDPlugin[] = [];
 
-function addPlugin(plugin: Plugin) {
+function addPlugin(plugin: MDPlugin) {
     pluginsList.push(plugin);
 }
 

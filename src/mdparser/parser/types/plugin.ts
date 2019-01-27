@@ -1,11 +1,11 @@
 import HElement from "../../htmlGen/element";
 
-abstract class Plugin {
+abstract class MDPlugin {
     /** The token that marks the start of the plugin element */
     public abstract startToken: string | RegExp;
 
     /** The token that marks the end of the plugin element */
-    public abstract endToken: string | RegExp;
+    protected abstract endToken: string | RegExp;
 
 
     /** The char required before matching start token */
@@ -21,10 +21,16 @@ abstract class Plugin {
     /** The token which when found, stops the search for the end token */
     public stopFindEndToken: string | RegExp = "\n";
 
+
     /** Called after grouping, the function to parse the contents of the plugin inside */
     public abstract parseSelf(): HElement;
+
+    /** For updating the end token for the start token */
+    public getDynamicEndToken(startToken: string): string | RegExp {
+        return this.endToken;
+    }
 
     constructor() { }
 }
 
-export default Plugin;
+export default MDPlugin;

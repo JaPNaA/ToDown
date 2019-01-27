@@ -1,8 +1,8 @@
 import pluginsList from "../../src/mdparser/pluginsImporter";
-import Plugin from "../../src/mdparser/parser/types/plugin";
+import MDPlugin from "../../src/mdparser/parser/types/plugin";
 import Test from "../test";
 
-function testPlugin(plugin: Plugin) {
+function testPlugin(plugin: MDPlugin) {
     for (let property of ["startToken", "endToken", "stopFindEndToken"]) {
         // @ts-ignore
         if (plugin[property] instanceof RegExp) {

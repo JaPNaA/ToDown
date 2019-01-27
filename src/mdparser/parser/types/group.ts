@@ -1,11 +1,11 @@
 import Range from "../../../types/range";
-import Plugin from "./plugin";
+import MDPlugin from "./plugin";
 
 class GroupPlugin extends Range {
-    public plugin: Plugin;
+    public plugin: MDPlugin;
     public inner: Range;
 
-    constructor(start: number, stop: number, innerStart: number, innerStop: number, plugin: Plugin) {
+    constructor(start: number, stop: number, innerStart: number, innerStop: number, plugin: MDPlugin) {
         super(start, stop);
         this.plugin = plugin;
         this.inner = new Range(innerStart, innerStop);
