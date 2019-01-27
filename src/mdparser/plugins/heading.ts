@@ -6,12 +6,11 @@ import HTextNode from "../htmlGen/nodes/text";
 import { addPlugin } from "./_pluginsList";
 
 class Heading extends Plugin {
-    startToken: RegExp = /^\n\s+#/;
+    startToken: RegExp = /^\n#\s+/;
     endToken: RegExp = /^\n/;
 
     constructor() {
         super();
-        this.afterConstructor();
     }
 
     public parseSelf(): HElement {

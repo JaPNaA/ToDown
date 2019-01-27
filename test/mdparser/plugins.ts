@@ -2,20 +2,8 @@ import pluginsList from "../../src/mdparser/pluginsImporter";
 import Plugin from "../../src/mdparser/parser/types/plugin";
 import Test from "../test";
 
-function isStringArray(arr: any): boolean {
-    if (!Array.isArray(arr)) { return false; }
-
-    for (let elm of arr) {
-        if (typeof elm !== "string") {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 function testPlugin(plugin: Plugin) {
-    for (let property of ["startTokenArr", "endTokenArr", "stopFindEndTokenArr"]) {
+    for (let property of ["startToken", "endToken", "stopFindEndToken"]) {
         // @ts-ignore
         if (plugin[property] instanceof RegExp) {
             pluginsTest.test("Should have a RegExp as " + property, function () {
@@ -35,9 +23,9 @@ function testPlugin(plugin: Plugin) {
                 pluginsTest.assertFalse(regexp.global);
             });
         } else {
-            pluginsTest.test("Should have a string[] as " + property, function () {
+            pluginsTest.test("Should have a string or regex as " + property, function () {
                 // @ts-ignore
-                pluginsTest.assertTrue(isStringArray(plugin[property]));
+                pluginsTest.assertEquals(typeof plugin[property], "string");
             });
         }
     }
