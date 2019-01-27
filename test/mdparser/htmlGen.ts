@@ -1,5 +1,5 @@
 import Test from "../test";
-import HFactory from "../../src/mdparser/parser/htmlGen/hFactory";
+import HFactory from "../../src/mdparser/htmlGen/hFactory";
 
 const expectedInnerText = "this is a &lt;p&gt;! &lt;p&gt;! &lt;p&gt;!";
 
