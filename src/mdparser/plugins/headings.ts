@@ -1,18 +1,18 @@
-import Plugin from "../parser/types/plugin";
+import MDPlugin from "../parser/types/plugin";
 import Range from "../../types/range";
 import HElement from "../htmlGen/element";
 import HParagraph from "../htmlGen/elements/p";
 import HTextNode from "../htmlGen/nodes/text";
 import { addPlugin } from "./_pluginsList";
 
-class Heading extends Plugin {
-    startToken: RegExp = /^#+\s+/;
-    endToken: string = "\n";
+class Heading extends MDPlugin {
+    public startToken: RegExp = /^#+\s+/;
+    protected endToken: string = "\n";
 
-    beforeStartChar: string = '\n';
-    afterEndChar: null = null;
-    captureEndToken: boolean = false;
-    stopFindEndToken: string = '\n';
+    public beforeStartChar: string = '\n';
+    public afterEndChar: null = null;
+    public captureEndToken: boolean = false;
+    public stopFindEndToken: string = '\n';
 
     constructor() {
         super();
