@@ -1,6 +1,6 @@
 import Test from "../../test";
 import Grouper from "../../../src/mdparser/parser/pipeline/grouper";
-import pluginsList from "../../../src/mdparser/parser/pluginsImporter";
+import pluginsList from "../../../src/mdparser/pluginsImporter";
 
 const grouperTest = new Test(function() {
     new Grouper("# jeep is a car", pluginsList);

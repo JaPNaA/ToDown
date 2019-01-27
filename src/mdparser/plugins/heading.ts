@@ -1,8 +1,8 @@
-import Plugin from "../types/plugin";
-import Range from "../../../types/range";
-import HElement from "../../htmlGen/element";
-import HParagraph from "../../htmlGen/elements/p";
-import HTextNode from "../../htmlGen/nodes/text";
+import Plugin from "../parser/types/plugin";
+import Range from "../../types/range";
+import HElement from "../htmlGen/element";
+import HParagraph from "../htmlGen/elements/p";
+import HTextNode from "../htmlGen/nodes/text";
 import { addPlugin } from "./_pluginsList";
 
 class Heading extends Plugin {

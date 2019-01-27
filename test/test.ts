@@ -168,7 +168,7 @@ class Test {
         for (let containee of containees) {
             if (!container.includes(containee)) {
                 this.errorWithStack(
-                    "Assert contains fail\n" + inspect(container) +
+                    "Assert contains failed\n" + inspect(container) +
                     "\ndoes not contain\n" + inspect(containee)
                 );
                 this.throwError();

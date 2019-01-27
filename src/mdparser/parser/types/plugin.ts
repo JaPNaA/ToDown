@@ -28,9 +28,9 @@ abstract class Plugin {
 
     // reason: avoid 'cannot access abstract property in constructor'
     protected afterConstructor() {
-        this.stopFindEndTokenArr = this.arrayify(this.stopFindEndToken);
         this.startTokenArr = this.arrayify(this.startToken);
         this.endTokenArr = this.arrayify(this.endToken);
+        this.stopFindEndTokenArr = this.arrayify(this.stopFindEndToken);
     }
 
     private arrayify(elm: string | RegExp): RegExp | string[] {

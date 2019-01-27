@@ -1,4 +1,4 @@
-import Plugin from "../types/plugin";
+import Plugin from "../parser/types/plugin";
 
 const pluginsList: Plugin[] = [];
 
