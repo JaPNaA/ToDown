@@ -1,14 +1,17 @@
 import Plugin from "../types/plugin";
 import GroupPlugin from "../types/group";
+import Range from "../../../types/range";
 
 class Grouper {
     // private markdown: string;
     private pluginsList: Plugin[];
     private substr: string;
+    private substrOffset: number;
     private groups: GroupPlugin[];
 
     constructor(markdown: string, pluginsList: Plugin[]) {
         this.substr = markdown;
+        this.substrOffset = 0;
         this.groups = [];
         this.pluginsList = pluginsList;
     }
@@ -23,36 +26,64 @@ class Grouper {
 
     private groupOne(): void {
         const match = this.findMatch();
-        if (true) {
-            this.moveAhead(1);
-            this.groups.push();
+        if (match) {
+            this.moveAhead(match.length());
+            this.groups.push(match);
         } else {
             this.moveAhead(1);
         }
     }
 
-    private findMatch() {
+    private findMatch(): GroupPlugin | null {
         for (let plugin of this.pluginsList) {
-            if (this.isMatch(plugin.startTokenArr)) {
-                //
+            const match = this.getMatch(this.substr, plugin.startToken);
+            if (match) {
+                const end = this.findStop(match, plugin.endToken, plugin.stopFindEndToken);
+                
+                if (end) {
+                    return new GroupPlugin(match.start, end.end, match.end, end.start, plugin);
+                }
             }
         }
+
+        return null;
     }
 
-    private isMatch(tokenArr: RegExp | string[]): boolean {
-        if (tokenArr instanceof RegExp) {
-            return this.isMatchRegexp(tokenArr);
+    private getMatch(substr: string, tokenArr: RegExp | string): Range | null {
+        if (tokenArr instanceof RegExp) { // possible optimization: don't check if is regex every time
+            return this.getMatchRegex(substr, tokenArr);
         } else {
-            return this.isMatchStringArr(tokenArr);
+            return this.getMatchStringArr(substr, tokenArr);
         }
     }
 
-    private isMatchRegexp(regex: RegExp): boolean {
-        return false;
+    private findStop(startMatch: Range, endTokenArr: RegExp | string, stopFindToken: RegExp | string): Range | null {
+        for (let i = startMatch.start; i < this.substr.length; i++) {
+            const substr = this.substr.slice(i);
+            const match = this.getMatch(substr, endTokenArr);
+
+            if (match) {
+                return match.offset(i);
+            } else if (this.getMatch(substr, stopFindToken)) {
+                return null;
+            }
+        }
+
+        return null;
     }
 
-    private isMatchStringArr(tokens: string[]): boolean {
-        return false;
+    private getMatchRegex(substr: string, regex: RegExp): Range | null {
+        const match = substr.match(regex);
+        if (!match) { return null; }
+        return new Range(0, match[0].length).offset(this.substrOffset);
+    }
+
+    private getMatchStringArr(substr: string, token: string): Range | null {
+        if (substr.startsWith(token)) {
+            return new Range(0, token.length).offset(this.substrOffset);
+        } else {
+            return null;
+        }
     }
 
     private isMoreToParse(): boolean {
@@ -61,6 +92,7 @@ class Grouper {
 
     private moveAhead(distance: number): void {
         this.substr = this.substr.slice(distance);
+        this.substrOffset += distance;
     }
 }
 

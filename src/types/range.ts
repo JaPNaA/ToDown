@@ -7,8 +7,18 @@ class Range {
         this.end = end;
     }
 
-    public middleIndex() {
-        return Math.floor(this.start + (this.end - this.start) / 2);
+    public middleIndex(): number {
+        return Math.floor(this.start + this.length() / 2);
+    }
+
+    public offset(by: number): Range {
+        this.start += by;
+        this.end += by;
+        return this;
+    }
+
+    public length(): number {
+        return this.end - this.start;
     }
 }
 

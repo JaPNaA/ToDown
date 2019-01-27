@@ -3,14 +3,9 @@ import Grouper from "../../../src/mdparser/parser/pipeline/grouper";
 import pluginsList from "../../../src/mdparser/pluginsImporter";
 
 const grouperTest = new Test(function() {
-    new Grouper("# jeep is a car", pluginsList);
-    // this.test("Finds Headings", function() {
-    //     const grouper = new Grouper("# This is a test \n# This is a test");
-    //     const result = grouper.group();
-    //     this.assertArrayEquals(
-    //         result,
-    //         ["#", "#"]
-    // });
+    console.log(
+        new Grouper("a\n# jeep is a car\nwhat about you?", pluginsList).group()
+    );
 });
 
 export default grouperTest;
