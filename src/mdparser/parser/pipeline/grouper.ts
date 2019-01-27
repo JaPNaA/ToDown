@@ -103,7 +103,7 @@ class Grouper {
     }
 
     private findStop(startMatch: Range, endTokenArr: RegExp | string, stopFindToken: RegExp | string): Range | null {
-        for (let i = startMatch.start; i < this.substr.length; i++) {
+        for (let i = startMatch.length(); i < this.substr.length; i++) {
             const substr = this.substr.slice(i);
             const match = this.getMatch(substr, endTokenArr);
 
