@@ -30,6 +30,10 @@ class Grouper {
             this.groupOne();
         }
 
+        for (let group of this.groups) {
+            group.groupChildren(this.markdown);
+        }
+
         return this.groups;
     }
 
