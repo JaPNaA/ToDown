@@ -5,11 +5,15 @@ import Group from "./group";
 class GroupPlugin extends Group {
     public plugin: MDPlugin;
     public inner: Range;
-
+    
     constructor(start: number, stop: number, innerStart: number, innerStop: number, plugin: MDPlugin) {
         super(start, stop, innerStart, innerStop);
         this.plugin = plugin;
         this.inner = new Range(innerStart, innerStop);
+    }
+    
+    public groupChildren(segment: string): void {
+        this.children = this.plugin.groupSelf(segment);
     }
 
     public parse(): void {

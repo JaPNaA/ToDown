@@ -1,4 +1,6 @@
 import HElement from "../../htmlGen/element";
+import Group from "./group";
+import GroupPlugin from "./groupPlugin";
 
 abstract class MDPlugin {
     /** The token that marks the start of the plugin element */
@@ -24,6 +26,9 @@ abstract class MDPlugin {
 
     /** Called after grouping, the function to parse the contents of the plugin inside */
     public abstract parseSelf(): HElement;
+
+    /** Called to group itself */
+    public abstract groupSelf(segment: string): Group[];
 
     /** For updating the end token for the start token */
     public getDynamicEndToken(startToken: string): string | RegExp {

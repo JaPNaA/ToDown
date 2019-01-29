@@ -2,6 +2,10 @@ import MDPlugin from "../parser/types/plugin";
 import HParagraph from "../htmlGen/elements/p";
 import HElement from "../htmlGen/element";
 import HTextNode from "../htmlGen/nodes/text";
+import GroupPlugin from "../parser/types/groupPlugin";
+import Grouper from "../parser/pipeline/grouper";
+import { emphasizerList } from "./_pluginsList";
+import Group from "../parser/types/group";
 
 abstract class Emphasizer extends MDPlugin {
     public abstract startToken: RegExp = /^./;
@@ -14,6 +18,12 @@ abstract class Emphasizer extends MDPlugin {
 
     constructor() {
         super();
+    }
+
+    public groupSelf(segment: string): Group[] {
+        // only allow emphasizers in emphasizers
+        const grouper = new Grouper(segment, emphasizerList);
+        return grouper.group();
     }
 
     public parseSelf(): HElement {
