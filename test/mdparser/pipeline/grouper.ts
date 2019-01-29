@@ -16,6 +16,12 @@ Because you better
 *I'm itallic*
 ****I'm both***
 * Assuming that it works
+
+_ asdf
+_im itallic_
+__im bold__
+___im both lol___
+_underscores_ __look__ ___weird___
 `;
 
 function test() {

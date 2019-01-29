@@ -4,9 +4,9 @@ import HTextNode from "../htmlGen/nodes/text";
 import { addPlugin } from "./_pluginsList";
 import Emphasizer from "./abstractEmphasizer";
 
-class Asterisks extends Emphasizer {
-    public startToken: RegExp = /^\*+/;
-    protected endToken: RegExp = /^\*+/;
+class Underscores extends Emphasizer {
+    public startToken: RegExp = /^_+/;
+    protected endToken: RegExp = /^_+/;
 
     constructor() {
         super();
@@ -14,12 +14,12 @@ class Asterisks extends Emphasizer {
 
     public parseSelf(): HElement {
         const p = new HParagraph();
-        const text = new HTextNode("Asterisks (not implemented)");
+        const text = new HTextNode("Underscores (not implemented)");
         p.appendChild(text);
         return p;
     }
 }
 
-addPlugin(new Asterisks());
+addPlugin(new Underscores());
 
-export default Asterisks;
+export default Underscores;
