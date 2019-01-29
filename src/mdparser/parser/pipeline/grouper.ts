@@ -1,14 +1,17 @@
 import MDPlugin from "../types/plugin";
-import GroupPlugin from "../types/group";
+import GroupPlugin from "../types/groupPlugin";
+import TextGroup from "../types/groupText";
 import Range from "../../../types/range";
+import Group from "../types/group";
 
 class Grouper {
     private markdown: string;
     private pluginsList: MDPlugin[];
     private substr: string;
     private substrOffset: number;
-    private groups: GroupPlugin[];
+    private groups: Group[];
 
+    private lastTextStart: number;
     private lastChar: string;
 
     constructor(markdown: string, pluginsList: MDPlugin[]) {
@@ -19,6 +22,7 @@ class Grouper {
         this.pluginsList = pluginsList;
 
         this.lastChar = '\n';
+        this.lastTextStart = -1;
     }
 
     public group() {
@@ -32,9 +36,13 @@ class Grouper {
     private groupOne(): void {
         const match = this.findMatch();
         if (match) {
+            this.addText();
             this.moveAheadWithMatch(match);
             this.groups.push(match);
         } else {
+            if (this.lastTextStart < 0) {
+                this.lastTextStart = this.substrOffset;
+            }
             this.moveAhead(1);
         }
     }
@@ -48,6 +56,12 @@ class Grouper {
         }
 
         return null;
+    }
+
+    private addText() {
+        if (this.lastTextStart < 0) { return; }
+        this.groups.push(new TextGroup(this.lastTextStart, this.substrOffset));
+        this.lastTextStart = -1;
     }
 
     private findAndCheckMatch(plugin: MDPlugin): GroupPlugin | null {

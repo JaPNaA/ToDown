@@ -2,6 +2,7 @@ import Test from "../../test";
 import Grouper from "../../../src/mdparser/parser/pipeline/grouper";
 import pluginsList from "../../../src/mdparser/pluginsImporter";
 import Timer from "../../_utils/timer";
+import { inspect } from "util";
 
 const str = `
 a
@@ -27,7 +28,7 @@ _underscores_ __look__ ___weird___
 function test() {
     const groups = new Grouper(str, pluginsList).group();
     for (let group of groups) {
-        console.log(str.slice(group.start, group.end));
+        console.log(inspect(str.slice(group.start, group.end)));
     }
 }
 

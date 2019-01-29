@@ -1,15 +1,14 @@
 import Range from "../../../types/range";
-import MDPlugin from "./plugin";
 
-class GroupPlugin extends Range {
-    public plugin: MDPlugin;
+abstract class Group extends Range {
     public inner: Range;
 
-    constructor(start: number, stop: number, innerStart: number, innerStop: number, plugin: MDPlugin) {
+    constructor(start: number, stop: number, innerStart: number, innerStop: number) {
         super(start, stop);
-        this.plugin = plugin;
         this.inner = new Range(innerStart, innerStop);
     }
+
+    public abstract parse(): void;
 }
 
-export default GroupPlugin;
+export default Group;
