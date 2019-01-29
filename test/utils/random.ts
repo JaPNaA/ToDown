@@ -1,6 +1,5 @@
 import { randomRange, randomIntRange, randomMax, randomIntMax } from "../../src/utils/random";
 import Test from "../test";
-import intify from "../../src/utils/intify";
 
 function isInt(x: number): boolean {
     return x === Math.floor(x);
@@ -23,7 +22,7 @@ function isInBoundsInt(_min: number, _x: number, _max: number): boolean {
     const x = _x;
     const max = Math.ceil(_max);
 
-    if (intify(max) - intify(min) <= 1) {
+    if (Math.trunc(max) - Math.trunc(min) <= 1) {
         if (min === x || max === x) {
             return true;
         } else {

@@ -1,5 +1,3 @@
-import intify from "./intify";
-
 function randomRange(start: number, end: number): number {
     const diff = end - start;
     return start + Math.random() * diff;
@@ -15,7 +13,7 @@ function randomIntRange(_start: number, end: number): number {
     const diff = end - start;
     const result = start + Math.random() * diff;
 
-    return intify(result);
+    return Math.trunc(result);
 }
 
 function randomMax(max: number): number {
@@ -23,7 +21,7 @@ function randomMax(max: number): number {
 }
 
 function randomIntMax(max: number): number {
-    return intify(Math.random() * max);
+    return Math.trunc(Math.random() * max);
 }
 
 export { randomRange, randomIntRange, randomMax, randomIntMax };
