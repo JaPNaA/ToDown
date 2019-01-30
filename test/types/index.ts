@@ -1,3 +1,4 @@
 import rangeTest from "./range";
+import binaryTreeTest from "./binaryTree";
 
-export default { range: rangeTest };
+export default { rangeTest, binaryTreeTest };

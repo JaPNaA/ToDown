@@ -1,31 +1,9 @@
 import binarySearch from "../../src/utils/binarySearch";
 import Test from "../test";
-import { randomIntMax, randomRange, randomIntRange } from "../../src/utils/random";
+import { randomSortedFloatArr, randomSortedIntArr } from "../_utils/randomSortedArr";
 
-function randFloatArr() {
-    const length = randomIntMax(1000);
-    const arr: number[] = [];
-
-    for (let i = 0; i < length; i++) {
-        arr.push(randomRange(-1e9, 1e9));
-    }
-
-    return arr.sort((a, b) => a - b);
-}
-
-function randIntArr() {
-    const length = randomIntMax(1000);
-    const arr: number[] = [];
-
-    for (let i = 0; i < length; i++) {
-        arr.push(randomIntRange(-100, 100));
-    }
-
-    return arr.sort((a, b) => a - b);
-}
-
-const floatArr = randFloatArr();
-const intArr = randIntArr();
+const floatArr = randomSortedFloatArr();
+const intArr = randomSortedIntArr();
 
 function binarySearchTestAllElements(arr: number[]) {
     for (let i = 0; i < arr.length; i++) {

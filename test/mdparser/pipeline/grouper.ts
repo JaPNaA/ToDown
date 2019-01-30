@@ -1,7 +1,6 @@
 import Test from "../../test";
 import Grouper from "../../../src/mdparser/parser/pipeline/grouper";
-import pluginsList from "../../../src/mdparser/pluginsImporter";
-import Timer from "../../_utils/timer";
+import pluginsList from "../../../src/mdparser/pluginsImporter"; 
 import { inspect } from "util";
 import Group from "../../../src/mdparser/parser/types/group";
 
