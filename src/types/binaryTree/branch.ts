@@ -1,11 +1,11 @@
-import BinaryTreeNode from "./node";
+import BTNode from "./node";
 
-class BinaryTreeBranch<T> extends BinaryTreeNode<T> {
-    less: BinaryTreeNode<T>;
-    more: BinaryTreeNode<T>;
+class Branch<T> extends BTNode<T> {
+    less: BTNode<T>;
+    more: BTNode<T>;
     offset: number;
 
-    constructor(less: BinaryTreeNode<T>, more: BinaryTreeNode<T>, offset: number) {
+    constructor(less: BTNode<T>, more: BTNode<T>, offset: number) {
         super();
 
         this.less = less;
@@ -17,4 +17,4 @@ class BinaryTreeBranch<T> extends BinaryTreeNode<T> {
     }
 }
 
-export default BinaryTreeBranch;
+export default Branch;

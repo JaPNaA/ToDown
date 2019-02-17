@@ -1,8 +1,8 @@
-import BinaryTreeBranch from "./branch";
+import Branch from "./branch";
 
-class BinaryTreeNode<T> {
-    parent?: BinaryTreeBranch<T>;
+class BTNode<T> {
+    parent?: Branch<T>;
     constructor() { }
 }
 
-export default BinaryTreeNode;
+export default BTNode;

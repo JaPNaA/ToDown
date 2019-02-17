@@ -1,6 +1,6 @@
-import BinaryTreeNode from "./node";
+import BTNode from "./node";
 
-class BinaryTreeLeaf<T> extends BinaryTreeNode<T> {
+class Leaf<T> extends BTNode<T> {
     value: T;
 
     constructor(value: T) {
@@ -9,4 +9,4 @@ class BinaryTreeLeaf<T> extends BinaryTreeNode<T> {
     }
 }
 
-export default BinaryTreeLeaf;
+export default Leaf;

@@ -30,7 +30,7 @@ _**I'm also both**_
 
 function test() {
     const groups = new Grouper(str, pluginsList).group();
-    logGroups(groups, 0);
+    // logGroups(groups, 0);
 }
 
 function logGroups(groups: Group[], offset: number) {
