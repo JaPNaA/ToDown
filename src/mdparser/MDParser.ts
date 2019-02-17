@@ -1,25 +1,27 @@
 import HFactory from "./htmlGen/hFactory";
+import Grouper from "./parser/pipeline/grouper";
+import HDom from "./htmlGen/dom";
+import pluginsList from "./pluginsImporter";
 
 class MDParser {
-    static parseToString(markdownStr: string) {
-        const root = HFactory.createRoot();
-        const a = HFactory.createA();
-        root.appendChild(a);
-        a.href = "https://japnaa.gitlab.io/";
-        a.appendChild(HFactory.createText("hello world"));
-
-        return root.toString();
+    static parseToString(markdownStr: string): string {
+        return this.parse(markdownStr).toString();
     }
     
-    static parseToElement(markdownStr: string): HTMLDivElement {
-        const elm = document.createElement("div");
-        elm.innerHTML = markdownStr;
-        return elm;
+    static parseToElement(markdownStr: string): DocumentFragment {
+        return this.parse(markdownStr).toElements();
     }
 
-    private static parse() {
-        const gen = new HFactory();
-        
+    private static parse(markdownStr: string): HDom {
+        const grouper = new Grouper(markdownStr, pluginsList);
+        const groups = grouper.group();
+        const root = HFactory.createRoot();
+
+        for (let group of groups) {
+            root.appendChild(group.parse());
+        }
+
+        return root;
     }
 }
 

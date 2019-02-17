@@ -1,11 +1,10 @@
 import MDPlugin from "../parser/types/plugin";
 import HElement from "../htmlGen/element";
-import HParagraph from "../htmlGen/elements/p";
-import HTextNode from "../htmlGen/nodes/text";
 import { addPlugin, emphasizerList } from "./_pluginsList";
 import GroupPlugin from "../parser/types/groupPlugin";
 import Group from "../parser/types/group";
 import Grouper from "../parser/pipeline/grouper";
+import HFactory from "../htmlGen/hFactory";
 
 class Heading extends MDPlugin {
     public startToken: RegExp = /^#+\s+/;
@@ -25,11 +24,25 @@ class Heading extends MDPlugin {
         return grouper.group();
     }
 
-    public parseSelf(): HElement {
-        const p = new HParagraph();
-        const text = new HTextNode("Heading (not implemented)");
-        p.appendChild(text);
-        return p;
+    public parseSelf(group: GroupPlugin): HElement {
+        const heading = HFactory.createHeading(this.countHashes(group.startToken));
+        const text = HFactory.createText(group.segment);
+        heading.appendChild(text);
+        return heading;
+    }
+
+    private countHashes(str: string) {
+        let count = 0;
+
+        for (const char of str) {
+            if (char === "#") {
+                count++;
+            } else {
+                break;
+            }
+        }
+
+        return count;
     }
 }
 

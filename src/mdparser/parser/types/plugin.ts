@@ -25,7 +25,7 @@ abstract class MDPlugin {
 
 
     /** Called after grouping, the function to parse the contents of the plugin inside */
-    public abstract parseSelf(): HElement;
+    public abstract parseSelf(group: GroupPlugin): HElement;
 
     /** Called to group itself */
     public abstract groupSelf(segment: string): Group[];

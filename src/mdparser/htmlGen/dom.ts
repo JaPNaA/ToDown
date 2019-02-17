@@ -1,13 +1,13 @@
-import HElement from "./element";
+import HNode from "./node";
 
 class HDom {
-    rootElms: HElement[];
+    rootElms: HNode[];
 
     constructor() {
         this.rootElms = [];
     }
 
-    public appendChild(child: HElement) {
+    public appendChild(child: HNode) {
         this.rootElms.push(child);
     }
 
@@ -15,8 +15,13 @@ class HDom {
         return this.rootElms.map(elm => elm.toString()).join('');
     }
 
-    public toElements() {
-        throw new Error("Not implemented");
+    public toElements(): DocumentFragment {
+        const docFrag = document.createDocumentFragment();
+        for (let elm of this.rootElms) {
+            docFrag.appendChild(elm.toElement());
+        }
+
+        return docFrag;
     }
 }
 

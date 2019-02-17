@@ -1,17 +1,16 @@
 import Group from "./group";
+import HFactory from "../../htmlGen/hFactory";
+import HNode from "../../htmlGen/node";
 
 class TextGroup extends Group {
-    public text: string;
-    
-    constructor(start: number, stop: number) {
-        super(start, stop, start, stop);
-        this.text = "";
+    constructor(start: number, stop: number, segmentFrom: string) {
+        super(start, stop, start, stop, segmentFrom);
     }
 
     public groupChildren(): void { }
 
-    public parse(): void {
-        throw new Error("Method not implemented.");
+    public parse(): HNode {
+        return HFactory.createText(this.segment);
     }
 }
 

@@ -34,6 +34,10 @@ class Grouper {
             group.groupChildren(this.markdown);
         }
 
+        if (this.lastTextStart >= 0) {
+            this.addText();
+        }
+
         return this.groups;
     }
 
@@ -64,7 +68,7 @@ class Grouper {
 
     private addText() {
         if (this.lastTextStart < 0) { return; }
-        this.groups.push(new TextGroup(this.lastTextStart, this.substrOffset));
+        this.groups.push(new TextGroup(this.lastTextStart, this.substrOffset, this.markdown));
         this.lastTextStart = -1;
     }
 
@@ -107,7 +111,7 @@ class Grouper {
             const end = this.findStop(match, endToken, plugin.stopFindEndToken);
 
             if (end) {
-                return new GroupPlugin(match.start, end.end, match.end, end.start, plugin);
+                return new GroupPlugin(match.start, end.end, match.end, end.start, this.markdown, plugin);
             }
         }
         return null;

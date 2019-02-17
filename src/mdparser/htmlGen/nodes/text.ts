@@ -18,7 +18,7 @@ class HTextNode extends HNode {
 
     private escapeString(str: string) {
         return str
-            .replace(/\n/g, "<br>")
+            // .replace(/\n/g, "<br>") // not needed: using .innerText
             .replace(/</g, "&lt;")
             .replace(/>/g, "&gt;");
     }

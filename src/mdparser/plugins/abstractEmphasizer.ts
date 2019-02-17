@@ -6,6 +6,7 @@ import GroupPlugin from "../parser/types/groupPlugin";
 import Grouper from "../parser/pipeline/grouper";
 import { emphasizerList } from "./_pluginsList";
 import Group from "../parser/types/group";
+import HFactory from "../htmlGen/hFactory";
 
 abstract class Emphasizer extends MDPlugin {
     public abstract startToken: RegExp = /^./;
@@ -26,9 +27,16 @@ abstract class Emphasizer extends MDPlugin {
         return grouper.group();
     }
 
-    public parseSelf(): HElement {
-        const p = new HParagraph();
-        const text = new HTextNode("Emphasizer (not implemented)");
+    public parseSelf(group: GroupPlugin): HElement {
+        let p: HElement;
+
+        if (group.startToken.length % 2) {
+            p = HFactory.createEmphasis();
+        } else {
+            p = HFactory.createStrong();
+        }
+
+        const text = HFactory.createText(group.segment);
         p.appendChild(text);
         return p;
     }
