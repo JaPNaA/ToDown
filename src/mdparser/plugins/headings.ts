@@ -26,8 +26,7 @@ class Heading extends MDPlugin {
 
     public parseSelf(group: GroupPlugin): HElement {
         const heading = HFactory.createHeading(this.countHashes(group.startToken));
-        const text = HFactory.createText(group.segment);
-        heading.appendChild(text);
+        group.appendChildrenTo(heading);
         return heading;
     }
 

@@ -21,7 +21,7 @@ abstract class MDPlugin {
 
 
     /** The token which when found, stops the search for the end token */
-    public stopFindEndToken: string | RegExp = "\n";
+    public stopFindEndToken: string | RegExp | null = "\n";
 
 
     /** Called after grouping, the function to parse the contents of the plugin inside */

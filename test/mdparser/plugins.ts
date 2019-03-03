@@ -3,7 +3,7 @@ import MDPlugin from "../../src/mdparser/parser/types/plugin";
 import Test from "../test";
 
 function testPlugin(plugin: MDPlugin) {
-    for (let property of ["startToken", "endToken", "stopFindEndToken"]) {
+    for (let property of ["startToken", "endToken"]) {
         // @ts-ignore
         if (plugin[property] instanceof RegExp) {
             pluginsTest.test("Should have a RegExp as " + property, function () {
@@ -29,6 +29,14 @@ function testPlugin(plugin: MDPlugin) {
             });
         }
     }
+
+    pluginsTest.test("Should have a string, regex, or null as stopFindEndToken", function() {
+        pluginsTest.assertTrue(
+            typeof plugin.stopFindEndToken === "string" ||
+            plugin.stopFindEndToken instanceof RegExp ||
+            plugin.stopFindEndToken === null
+        );
+    });
 }
 
 const pluginsTest = new Test(function () {

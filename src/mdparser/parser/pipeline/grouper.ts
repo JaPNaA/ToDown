@@ -58,6 +58,7 @@ class Grouper {
     private findMatch(): GroupPlugin | null {
         for (let plugin of this.pluginsList) {
             const match = this.findAndCheckMatch(plugin);
+
             if (match) {
                 return match;
             }
@@ -117,21 +118,23 @@ class Grouper {
         return null;
     }
 
-    private getMatch(substr: string, tokenArr: RegExp | string): Range | null {
-        if (tokenArr instanceof RegExp) { // possible optimization: don't check if is regex every time
-            return this.getMatchRegex(substr, tokenArr);
+    private getMatch(substr: string, token: RegExp | string): Range | null {
+        if (token instanceof RegExp) { // possible optimization: don't check if is regex every time
+            return this.getMatchRegex(substr, token);
         } else {
-            return this.getMatchStringArr(substr, tokenArr);
+            return this.getMatchStringArr(substr, token);
         }
     }
 
-    private findStop(startMatch: Range, endTokenArr: RegExp | string, stopFindToken: RegExp | string): Range | null {
+    private findStop(startMatch: Range, endToken: RegExp | string, stopFindToken: RegExp | string | null): Range | null {
         for (let i = startMatch.length(); i < this.substr.length; i++) {
             const substr = this.substr.slice(i);
-            const match = this.getMatch(substr, endTokenArr);
+            const match = this.getMatch(substr, endToken);
 
             if (match) {
                 return match.offset(i);
+            } else if (stopFindToken === null) {
+                continue;
             } else if (this.getMatch(substr, stopFindToken)) {
                 return null;
             }
